@@ -285,7 +285,7 @@ async function processUpdateNodeStatuses(db: DrizzleD1Database, clusterUuid: str
     console.log(`🔄 Processing update-node-statuses for cluster: ${clusterUuid}, job: ${jobUuid}`);
 
     try {
-		await updateJobStatus(db, jobUuid, 'processing');
+        await updateJobStatus(db, jobUuid, 'processing');
 
         const job = await getJobByUuid(db, jobUuid);
         if (!job) {
@@ -294,30 +294,30 @@ async function processUpdateNodeStatuses(db: DrizzleD1Database, clusterUuid: str
         const { node_ids, status } = JSON.parse(job.payload ?? '{}');
 
         if (!node_ids || node_ids.length === 0) {
-			throw new Error('node_ids must be a non-empty array');
-		}
+            throw new Error('node_ids must be a non-empty array');
+        }
 
         const existingNodes = await getNodesByIds(db, clusterUuid, node_ids);
 
-		if (!existingNodes.length) throw new Error('No nodes found');
-        
-		await updateTotalNodes(db, jobUuid, existingNodes.length);
+        if (!existingNodes.length) throw new Error('No nodes found');
 
-		let processed = 0;
+        await updateTotalNodes(db, jobUuid, existingNodes.length);
 
-		for (let i = 0; i < existingNodes.length; i++) {
+        let processed = 0;
+
+        for (let i = 0; i < existingNodes.length; i++) {
             const node = existingNodes[i];
             await updateNodeStatus(db, clusterUuid, node.id, status, node.updatedData ?? null, node.hasUpdated ? true : false);
-			processed++;
+            processed++;
 
-			if (processed % 10 === 0 || i === existingNodes.length - 1) {
-				await updateProcessedNodes(db, jobUuid, processed);
+            if (processed % 10 === 0 || i === existingNodes.length - 1) {
+                await updateProcessedNodes(db, jobUuid, processed);
                 processed = 0;
-			}
+            }
 
-			// Prevent shutdown by D1 and worker
-			await sleep(30);
-		}
+            // Prevent shutdown by D1 and worker
+            await sleep(30);
+        }
 
         await updateJobStatus(db, jobUuid, 'completed');
 
@@ -363,42 +363,44 @@ export default {
 
         const db = getDB(env);
 
-        for (const message of batch.messages) {
-            const { job_uuid, type, target_id, target_type, payload } = message.body;
+        await Promise.all(
+            batch.messages.map(async (message) => {
+                const { job_uuid, type, target_id, target_type } = message.body;
 
-            if (target_type === 'clusters' && type === 'create-nodes') {
-                try {
-                    await processCreateNodes(db, target_id, job_uuid);
-                } catch (error) {
-                    console.error(`❌ Error processing create-nodes for cluster ${target_id}:`, error);
-                    await updateJobOnFailure(db, job_uuid, error instanceof Error ? error.message : 'Unknown error');
+                if (target_type === 'clusters' && type === 'create-nodes') {
+                    try {
+                        await processCreateNodes(db, target_id, job_uuid);
+                    } catch (error) {
+                        console.error(`❌ Error processing create-nodes for cluster ${target_id}:`, error);
+                        await updateJobOnFailure(db, job_uuid, error instanceof Error ? error.message : 'Unknown error');
+                    }
+                } else if (type === 'update-nodes' && target_type === 'clusters') {
+                    try {
+                        await processUpdateNodes(db, target_id, job_uuid);
+                    } catch (error) {
+                        console.error(`❌ Error processing update-nodes for cluster ${target_id}:`, error);
+                        await updateJobOnFailure(db, job_uuid, error instanceof Error ? error.message : 'Unknown error');
+                    }
+                } else if (target_type === 'clusters' && type === 'update-node-statuses') {
+                    try {
+                        await processUpdateNodeStatuses(db, target_id, job_uuid);
+                    } catch (error) {
+                        console.error(`❌ Error processing update-node-statuses for cluster ${target_id}:`, error);
+                        await updateJobOnFailure(db, job_uuid, error instanceof Error ? error.message : 'Unknown error');
+                    }
+                } else {
+                    console.log("❌ Unhandled message type:", {
+                        job_uuid,
+                        type,
+                        target_id,
+                        target_type
+                    });
+                    console.log("Full message body:", message.body);
+                    await updateJobOnFailure(db, job_uuid, 'Unhandled message type');
                 }
-            } else if (type === 'update-nodes' && target_type === 'clusters') {
-                try {
-                    await processUpdateNodes(db, target_id, job_uuid);
-                } catch (error) {
-                    console.error(`❌ Error processing update-nodes for cluster ${target_id}:`, error);
-                    await updateJobOnFailure(db, job_uuid, error instanceof Error ? error.message : 'Unknown error');
-                }
-            } else if (target_type === 'clusters' && type === 'update-node-statuses') {
-                try {
-                    await processUpdateNodeStatuses(db, target_id, job_uuid);
-                } catch (error) {
-                    console.error(`❌ Error processing update-node-statuses for cluster ${target_id}:`, error);
-                    await updateJobOnFailure(db, job_uuid, error instanceof Error ? error.message : 'Unknown error');
-                }
-            } else {
-                console.log("❌ Unhandled message type:", {
-                    job_uuid,
-                    type,
-                    target_id,
-                    target_type
-                });
-                console.log("Full message body:", message.body);
-                await updateJobOnFailure(db, job_uuid, 'Unhandled message type');
-            }
-            message.ack();
-        }
+                message.ack();
+            })
+        );
     },
 
     async fetch(request: Request, env: Env) {
