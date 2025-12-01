@@ -1,5 +1,5 @@
 {
-	"name": "murmurations-aggregator-consumer-preview",
+	"name": "murmur-maps-consumer-preview",
 	"compatibility_date": "2025-09-15",
 	"compatibility_flags": [
 		"nodejs_compat_v2"
@@ -8,33 +8,33 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "murmurations-aggregator-preview",
-			"database_id": "f11249b3-1819-4eb9-ab86-e06a44b16222",
+			"database_name": "murmur-maps-preview",
+			"database_id": "67d48bb2-619b-4fb7-9626-eab8df9d45ce",
 			"migrations_dir": "drizzle"
 		}
 	],
 	"queues": {
 		"consumers": [
 			{
-				"queue": "murmurations-aggregator-queue-preview"
+				"queue": "murmur-maps-queue-preview"
 			}
 		]
 	},
 	"env": {
 		"production": {
-			"name": "murmurations-aggregator-consumer",
+			"name": "murmur-maps-consumer",
 			"d1_databases": [
 				{
 					"binding": "DB",
-					"database_name": "murmurations-aggregator",
-					"database_id": "2453fcf5-60d9-4563-8eb4-adc04c9b9826",
+					"database_name": "murmur-maps",
+					"database_id": "57fbc324-1f02-4ce0-b169-4b2d14a0bbc6",
 					"migrations_dir": "drizzle"
 				}
 			],
 			"queues": {
 				"consumers": [
 					{
-						"queue": "murmurations-aggregator-queue"
+						"queue": "murmur-maps-queue"
 					}
 				]
 			}
