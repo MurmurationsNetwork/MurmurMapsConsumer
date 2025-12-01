@@ -1,5 +1,5 @@
 {
-	"name": "murmurations-aggregator-consumer",
+	"name": "murmurations-maps-consumer",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -7,7 +7,7 @@
 		"dev": "wrangler dev",
 		"deploy": "wrangler deploy",
 		"deploy:production": "wrangler deploy --env production",
-		"db:link": "ln -s ../murmurations-aggregator/.wrangler .wrangler"
+		"db:link": "ln -s ../MurmurMaps/.wrangler .wrangler"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20251014.0",
