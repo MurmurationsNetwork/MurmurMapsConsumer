@@ -33,7 +33,7 @@ Example queue name:
 
 - murmur-maps-queue
 
-Once created, the queue will initially appear as `inactive` until both a consumer and a producer are correctly configured.
+Once created, the queue will initially appear as **Inactive** until both a consumer and a producer are correctly configured.
 
 ### 2. Configure `wrangler.jsonc` in MurmurMaps Consumer (this project)
 
