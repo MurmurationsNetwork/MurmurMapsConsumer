@@ -95,7 +95,7 @@ The payload corresponds to a row in the `jobs` table and simulates a queue messa
 
 ### Prerequisite
 
-Please complete the MurmurMaps project setup and deployment before configuring and deploying the MurmurMaps Consumer (this project).
+Please complete the [MurmurMaps](https://github.com/MurmurationsNetwork/MurmurMaps) project setup and deployment before configuring and deploying the MurmurMaps Consumer (this project).
 
 ### 1. Configure `wrangler.jsonc` in MurmurMaps Consumer (this project)
 
