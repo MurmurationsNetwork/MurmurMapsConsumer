@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project functions as a Consumer within the MurmurMaps architecture. Its primary responsibility is to asynchronously handle long-running background tasks—such as cluster creation, node updates, and bulk node status updates—by consuming messages from Cloudflare Queues.
+This project functions as a Consumer within the MurmurMaps architecture. Its primary responsibility is to asynchronously handle long-running background tasks—such as cluster creation, node updates and bulk node status updates by consuming messages from Cloudflare Queues.
 
 This consumer solves several critical problems:
 
@@ -12,9 +12,9 @@ This consumer solves several critical problems:
 
 - Improved user experience: the client only needs to display background job progress, rather than blocking on synchronous operations.
 
-In practice, the client triggers a job (such as creating clusters or updating nodes), enqueues a message, and then periodically polls job status. The actual work is performed entirely by this MurmurMaps Consumer, ensuring reliability, scalability, and fault tolerance.
+In practice, the client triggers a job (such as creating clusters or updating nodes), enqueues a message, and then periodically polls job status. The actual work is performed entirely by this MurmurMaps Consumer, ensuring reliability, scalability and fault tolerance.
 
-Main Project repository: [MurmurMaps](https://github.com/MurmurationsNetwork/MurmurMaps).
+Main Project repository: <https://github.com/MurmurationsNetwork/MurmurMaps>.
 
 ## Local Develepment Guide
 
@@ -99,8 +99,7 @@ Please complete the [MurmurMaps](https://github.com/MurmurationsNetwork/MurmurMa
 
 ### 1. Configure `wrangler.jsonc` in MurmurMaps Consumer (this project)
 
-⚠️ Important:
-Please use the same queue names as those defined for the queue producers in the MurmurMaps project.
+⚠️ Important: Please use the same queue names as those defined for the queue producers in the MurmurMaps project.
 
 ```jsonc
 {
