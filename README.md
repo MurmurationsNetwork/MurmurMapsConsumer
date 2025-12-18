@@ -16,26 +16,91 @@ In practice, the client triggers a job (such as creating clusters or updating no
 
 Main Project repository: [MurmurMaps](https://github.com/MurmurationsNetwork/MurmurMaps).
 
-## Setup Guide
+## Local Develepment Guide
 
 ### Prerequisites
 
-Before starting, make sure you have:
+- Node.js (20+)
+- pnpm
 
-- A Cloudflare account with Workers, Queues, and D1 enabled
-- Access to the MurmurMaps repository
+⚠️ Important:
+MurmurMaps and MurmurMapsConsumer must be located under the same parent directory.
 
-### 1. Create a Cloudflare Queue
+```bash
+projects/
+├── MurmurMaps/
+└── MurmurMapsConsumer/
+```
 
-First, create a queue in the Cloudflare dashboard. This queue will be used to deliver background jobs from the producer (MurmurMaps Pages) to the consumer (this Worker).
+### 1. Link the Local D1 Database
 
-Example queue name:
+The Consumer reuses MurmurMaps’ local D1 database by linking the `.wrangler` directory.
 
-- murmur-maps-queue
+Run the following command in MurmurMaps Consumer:
 
-Once created, the queue will initially appear as **Inactive** until both a consumer and a producer are correctly configured.
+```bash
+pnpm run db:link
+```
 
-### 2. Configure `wrangler.jsonc` in MurmurMaps Consumer (this project)
+This executes:
+
+```bash
+ln -s ../MurmurMaps/.wrangler .wrangler
+```
+
+This ensures both projects share the same local D1 database during development.
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Run the Consumer Locally
+
+```bash
+pnpm dev
+```
+
+By default, the Worker will be available at:
+
+```bash
+http://localhost:8787
+```
+
+### 4. Trigger a Job Locally
+
+For local testing, jobs can be triggered by sending a request to the Consumer.
+
+#### Request
+
+```bash
+GET http://localhost:8787
+```
+
+#### Body
+
+```bash
+{
+  "job_uuid": "35eb82cf-4955-42b2-8bc9-cb743a73976d",
+  "type": "create-nodes",
+  "target_id": "1ea18216-aae8-4a47-a0b1-3aba0a9e7820",
+  "target_type": "clusters"
+}
+```
+
+The payload corresponds to a row in the `jobs` table and simulates a queue message being processed by the Consumer.
+
+## Cloudflare Deployment Guide
+
+### Prerequisite
+
+Please complete the MurmurMaps project setup and deployment before configuring and deploying the MurmurMaps Consumer (this project).
+
+### 1. Configure `wrangler.jsonc` in MurmurMaps Consumer (this project)
+
+⚠️ Important:
+Please use the same queue names as those defined for the queue producers in the MurmurMaps project.
 
 ```jsonc
 {
@@ -49,25 +114,10 @@ Once created, the queue will initially appear as **Inactive** until both a consu
 }
 ```
 
-### 3. Deploy MurmurMaps Consumer (this project) as Cloudflare Worker
+### 2. Deploy MurmurMaps Consumer (this project) as Cloudflare Worker
 
 Click "Create application" on the Cloudflare "Workers & Pages" page, and the queue will be automatically bound to this Worker.
 
-### 4. Configure `wrangler.jsonc` in MurmurMaps and redeploy the application for the changes to take effect
+### 3. Validate the Cloudflare Queue status
 
-```jsonc
-{
-  "queues": {
-    "producers": [
-      {
-        "queue": "murmur-maps-queue",
-        "binding": "JOB_QUEUE"
-      }
-    ]
-  }
-}
-```
-
-### 5. Validate the Cloudflare Queue status
-
-Once the consumer and producer are deployed, the queue status will become **Active** in the Cloudflare dashboard.
+Once the consumer (this project) and producer (MurmurMaps) are deployed, the queue status will become **Active** in the Cloudflare dashboard.
