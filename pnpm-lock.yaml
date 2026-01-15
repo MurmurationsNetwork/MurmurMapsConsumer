@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       drizzle-orm:
-        specifier: ^0.44.7
-        version: 0.44.7(@cloudflare/workers-types@4.20260115.0)(better-sqlite3@12.4.1)
+        specifier: ^0.45.1
+        version: 0.45.1(@cloudflare/workers-types@4.20260115.0)(better-sqlite3@12.4.1)
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20260115.0
@@ -434,8 +434,8 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
-  drizzle-orm@0.44.7:
-    resolution: {integrity: sha512-quIpnYznjU9lHshEOAYLoZ9s3jweleHlZIAWR/jX9gAWNg/JhQ1wj0KGRf7/Zm+obRrYd9GjPVJg790QY9N5AQ==}
+  drizzle-orm@0.45.1:
+    resolution: {integrity: sha512-Te0FOdKIistGNPMq2jscdqngBRfBpC8uMFVwqjf6gtTVJHIQ/dosgV/CLBU2N4ZJBsXL5savCba9b0YJskKdcA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -990,7 +990,7 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
-  drizzle-orm@0.44.7(@cloudflare/workers-types@4.20260115.0)(better-sqlite3@12.4.1):
+  drizzle-orm@0.45.1(@cloudflare/workers-types@4.20260115.0)(better-sqlite3@12.4.1):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20260115.0
       better-sqlite3: 12.4.1
