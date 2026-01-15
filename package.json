@@ -15,6 +15,6 @@
 		"wrangler": "^4.59.2"
 	},
 	"dependencies": {
-		"drizzle-orm": "^0.44.7"
+		"drizzle-orm": "^0.45.1"
 	}
 }
