@@ -12,7 +12,7 @@
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20260514.1",
 		"typescript": "^6.0.3",
-		"wrangler": "^4.86.0"
+		"wrangler": "^4.91.0"
 	},
 	"dependencies": {
 		"drizzle-orm": "^0.45.2"
