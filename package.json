@@ -10,7 +10,7 @@
 		"db:link": "ln -s ../MurmurMaps/.wrangler .wrangler"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20260613.1",
+		"@cloudflare/workers-types": "^4.20260617.1",
 		"typescript": "^6.0.3",
 		"wrangler": "^4.91.0"
 	},
